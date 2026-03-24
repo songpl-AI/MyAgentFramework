@@ -1,6 +1,6 @@
 # 开发阶段需求文档总览
 
-> 从零构建商业级 Agent 框架 — 详细需求与设计文档
+> 从零构建 Agent 框架 — 详细需求与设计文档
 
 ---
 
@@ -18,7 +18,7 @@
 | [Phase 7](phase-7-observability.md) | 可观测性 | `v0.7-observability` | Trace/Span、Metrics、Exporters | 《Agent 出了问题怎么调试 — 可观测性实战》 |
 | [Phase 8](phase-8-mcp.md) | MCP 协议支持 | `v0.8-mcp` | MCP Client + Server | 《MCP — Agent 工具的通用语言》 |
 | [Phase 9](phase-9-production.md) | 生产化 | `v0.9-production` | 配置驱动、断点恢复、错误恢复 | 《从玩具到生产 — Agent 框架的最后一公里》 |
-| [Phase 10](phase-10-release.md) | 发布 v1.0 | `v1.0-release` | API 稳定、文档、PyPI、示例 | 《我们构建了一个商业级 Agent 框架》 |
+| [Phase 10](phase-10-release.md) | 发布 v1.0 | `v1.0-release` | API 稳定、文档、PyPI、示例 | 《我们从零构建了一个 Agent 框架》 |
 
 ## 复杂度曲线
 
