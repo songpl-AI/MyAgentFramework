@@ -299,3 +299,5 @@ raise MaxStepsExceeded
 2. **pytest-asyncio 与 `asyncio.run()` 冲突**：`test_run_sync` 测试标记了 `@pytest.mark.asyncio`，测试函数在事件循环内运行，而 `run_sync()` 内部调用 `asyncio.run()` 不能嵌套事件循环。解决：去掉该测试的 `async` 标记，作为纯同步测试运行。
 
 3. **Ruff I001 import sorting**：`from __future__ import annotations` 与后续 import 之间的排序问题，3 个文件受影响。解决：`ruff check --fix` 自动修复。
+
+4. **Ruff RUF003 与中文注释冲突**：将代码注释改为中文后，ruff RUF003 规则报 22 个错误，将中文全角标点（`：`、`，`、`（`、`）`）标记为"歧义字符"。解决：在 `pyproject.toml` 中 `ignore = ["RUF003"]`，这是项目级别的决策——我们选择中文注释作为编码规范。
