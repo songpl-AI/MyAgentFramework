@@ -241,25 +241,39 @@ MyAgentFramework/
 ### 问题 2：...
 ```
 
-### 参考框架链接
+### 参考资源链接（代码 + 论文 + 博客）
 
-在每个 Phase 文档中维护一个 `## 参考实现` 章节，记录开发时参考的其他框架的**具体代码链接**：
+在每个 Phase 文档中维护一个 `## 参考实现` 章节，记录开发时参考的**所有外部资源**，包括代码、论文、博客文章：
 
 格式示例：
 ```markdown
 ## 参考实现
 
+### 学术论文 / 技术报告
+| 论文 | 关联 | 链接 |
+|---|---|---|
+| ReAct: Synergizing Reasoning and Acting in Language Models | Agent Loop 的理论基础 | https://arxiv.org/abs/2210.03629 |
+| Toolformer: Language Models Can Teach Themselves to Use Tools | Tool 调用的学术起源 | https://arxiv.org/abs/2302.04761 |
+
+### 博客文章 / 技术文档
+| 文章 | 关联 | 链接 |
+|---|---|---|
+| LangChain 官方 Tool 教程 | @tool 装饰器设计参考 | https://python.langchain.com/docs/how_to/custom_tools/ |
+| Lilian Weng: LLM Powered Autonomous Agents | Agent 系统全景综述 | https://lilianweng.github.io/posts/2023-06-23-agent/ |
+
+### 开源代码
 | 参考内容 | 框架 | 链接 |
 |---|---|---|
 | Tool Schema 生成 | LangChain | https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/tools/convert.py |
 | Handoff 模式 | OpenAI Agents SDK | https://github.com/openai/openai-agents-python/blob/main/src/agents/handoff.py |
-| Checkpoint 机制 | LangGraph | https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint/langgraph/checkpoint/base.py |
 ```
 
 **要求**：
-- 链接必须指向具体文件或代码行，不是仓库首页
-- 说明参考了什么（设计思路 / API 风格 / 具体实现）
-- 如果参考了文档或博客，同样附上链接
+- 代码链接必须指向具体文件或代码行，不是仓库首页
+- 论文链接用 arxiv 地址（如 `https://arxiv.org/abs/xxxx.xxxxx`）
+- 博客/文档附上原始 URL
+- 每条说明**与当前阶段的关联**（我们借鉴了什么、受到了什么启发）
+- 宁多勿少：有启发的都记录，方便博客写作和读者延伸阅读
 
 ## 博客写作规范
 
@@ -274,7 +288,9 @@ MyAgentFramework/
 - [框架对比分析](docs/agent-frameworks-comparison.md)
 - [阶段需求文档总览](docs/phases/README.md)
 
-## 常用参考框架仓库
+## 常用参考资源
+
+### 开源框架仓库
 
 | 框架 | 仓库地址 |
 |---|---|
@@ -288,3 +304,23 @@ MyAgentFramework/
 | Vercel AI SDK | https://github.com/vercel/ai |
 | Agno | https://github.com/agno-agi/agno |
 | MCP Specification | https://github.com/modelcontextprotocol/specification |
+
+### 关键论文
+
+| 论文 | 相关阶段 | 链接 |
+|---|---|---|
+| ReAct: Synergizing Reasoning and Acting in LMs | Phase 1 Agent Loop | https://arxiv.org/abs/2210.03629 |
+| Toolformer: LMs Can Teach Themselves to Use Tools | Phase 2 Tool 系统 | https://arxiv.org/abs/2302.04761 |
+| MemGPT: Towards LLMs as Operating Systems | Phase 4 Memory | https://arxiv.org/abs/2310.08560 |
+| AutoGen: Enabling Next-Gen LLM Applications | Phase 5 多 Agent | https://arxiv.org/abs/2308.08155 |
+| Constitutional AI: Harmlessness from AI Feedback | Phase 6 Guardrails | https://arxiv.org/abs/2212.08073 |
+| Chain-of-Thought Prompting Elicits Reasoning | 基础理论 | https://arxiv.org/abs/2201.11903 |
+
+### 经典博客 / 综述
+
+| 文章 | 说明 | 链接 |
+|---|---|---|
+| Lilian Weng: LLM Powered Autonomous Agents | Agent 系统全景综述，必读 | https://lilianweng.github.io/posts/2023-06-23-agent/ |
+| Anthropic: Building effective agents | Anthropic 官方 Agent 构建指南 | https://www.anthropic.com/research/building-effective-agents |
+| OpenAI: A practical guide to building agents | OpenAI 官方 Agent 实践指南 | https://platform.openai.com/docs/guides/agents |
+| Simon Willison: MCP 相关文章 | MCP 协议分析和实践 | https://simonwillison.net/tags/mcp/ |
