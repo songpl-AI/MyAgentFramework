@@ -173,40 +173,129 @@ src/myagent/
 
 ## 设计思考
 
-> 从第一性原理出发的设计推理过程
+### 问题本质
 
-_开发时填写：问题本质 → 独立思考 → 开源框架怎么做 → 我们的选择与理由_
+Agent Loop 要解决的根本问题是：**如何让 LLM 从"一次性问答"变成"持续推理直到完成任务"？**
+
+一次普通的 LLM 调用是无状态的 — 你问一个问题，模型回答，结束。但真实任务往往需要多步推理：查找信息、执行计算、基于结果继续分析。Agent Loop 就是把这个多步过程自动化的机制。
+
+用 Anthropic 的话说：**"LLMs using tools based on environmental feedback in a loop."**
+
+### 独立思考：最小循环应该长什么样？
+
+从最简单的角度思考，一个 Agent Loop 只需要：
+
+```
+messages = [system_prompt, user_input]
+for i in range(max_steps):
+    response = llm.call(messages)
+    messages.append(response)
+    if response.is_final:  # 模型认为可以结束了
+        return response.text
+raise MaxStepsExceeded
+```
+
+这就是全部。核心问题只有两个：
+1. **何时继续**：模型返回了工具调用 → 执行工具 → 将结果加入历史 → 继续
+2. **何时停止**：模型返回最终文本（无工具调用）or 达到步数上限
+
+### 开源框架怎么做
+
+调研了 4 个框架的 Agent Loop 实现，发现了有意思的分化：
+
+**OpenAI Agents SDK** — `while True` + NextStep 类型分发
+- 循环在 `src/agents/run.py` 的 `AgentRunner.run()` 中
+- 每次迭代是一个"turn"（一次 LLM 调用 + 工具执行）
+- 通过 4 种 NextStep 类型决定下一步：FinalOutput / RunAgain / Handoff / Interruption
+- 用 `return` 退出循环，不用 `break`
+- 设计重：1600+ 行，处理了 Guardrails、Handoff、Streaming、Resume 等所有场景
+
+**Anthropic SDK** — 最简洁的 `while True`
+- 手动模式：检查 `stop_reason == "tool_use"` 继续，否则退出
+- SDK 内置 Tool Runner（`_beta_runner.py`）：`while not self._should_stop()` 循环
+- 关键差异：Anthropic 只有 user/assistant 两种角色，tool_result 嵌在 user 消息中
+- 内置 Context Compaction（超过 100k tokens 时自动总结压缩）
+
+**Agno** — 两层循环架构
+- 外层 `Agent._run()` 是单次编排（session 管理、hooks、后处理）
+- 内层 `Model.response()` 才是真正的 `while True` 工具调用循环
+- 循环放在 Model 层而非 Agent 层 — 简化了 Agent 代码但耦合了迭代逻辑
+- 终止条件最丰富：tool_call_limit、stop_after_tool_call、HITL 等
+
+**LangGraph** — 图执行（完全不同的范式）
+- 不是 while 循环，而是 BSP（Bulk Synchronous Parallel）模型
+- `agent` 节点 → 条件边 `should_continue` → `tools` 节点 → 回到 `agent`
+- 终止 = 条件边返回 END（无工具调用时）
+- 强大但复杂度高，不适合作为最小实现的参考
+
+### 我们的选择
+
+**循环结构：简洁的 `for` 循环 + 明确退出**
+
+不用 `while True`（需要额外的 break/max 检查），用 `for i in range(max_steps)` — 天然自带步数限制，更安全。
+
+**循环放在 Agent 层**
+
+不像 Agno 那样放在 Model 层。原因：
+- Agent 层控制循环 = Agent 拥有完整的执行权（后续加 Guardrails、Tracing 更自然）
+- Model 层应该只负责"调用一次 LLM"— 单一职责
+
+**消息格式：自定义 Message，预留 tool 扩展**
+
+参考 Anthropic 的 content block 思路，但 Phase 1 先用最简单的 `role + content` 结构。Message 的 role 预留 `"tool"` 给 Phase 2，但本阶段不实现。
+
+**终止判断：基于 finish_reason**
+
+- OpenAI 用 `finish_reason: "stop"` 表示自然结束
+- Anthropic 用 `stop_reason: "end_turn"` 表示自然结束
+- 我们统一为 `finish_reason` 字段，由 Provider 适配层（Phase 3）负责翻译
+
+**LLM 调用：先硬编码 OpenAI，但通过 Protocol 预留接口**
+
+不做完整 Provider 抽象（Phase 3 的事），但用 Python Protocol 定义调用签名，让 Mock 和真实 Provider 有统一接口。这样测试可以完全不依赖真实 API。
 
 ---
-## 参考实现
 
-> 开发过程中参考的论文、博客和开源代码
+## 参考实现
 
 ### 学术论文 / 技术报告
 | 论文 | 关联 | 链接 |
 |---|---|---|
-| _开发时填写_ | | |
+| ReAct: Synergizing Reasoning and Acting in Language Models | Agent Loop 的理论基础 — Thought→Action→Observation 循环 | https://arxiv.org/abs/2210.03629 |
+| Chain-of-Thought Prompting Elicits Reasoning in LLMs | CoT 是 ReAct 的前身，理解"模型可以多步推理" | https://arxiv.org/abs/2201.11903 |
 
 ### 博客文章 / 技术文档
 | 文章 | 关联 | 链接 |
 |---|---|---|
-| _开发时填写_ | | |
+| Lilian Weng: LLM Powered Autonomous Agents | Agent 系统全景综述：Planning + Memory + Tool Use 三要素 | https://lilianweng.github.io/posts/2023-06-23-agent/ |
+| Anthropic: Building effective agents | "Find the simplest solution possible" — 简洁优先的设计哲学 | https://www.anthropic.com/research/building-effective-agents |
+| OpenAI: A practical guide to building agents | Agent 执行流程的官方描述 | https://platform.openai.com/docs/guides/agents |
+| Anthropic: Tool use documentation | Anthropic 消息格式和 stop_reason 机制 | https://docs.anthropic.com/en/docs/build-with-claude/tool-use |
 
 ### 开源代码
 | 参考内容 | 框架 | 链接 |
 |---|---|---|
-| _开发时填写_ | | |
+| AgentRunner.run() — while True 主循环 + NextStep 分发 | OpenAI Agents SDK | https://github.com/openai/openai-agents-python/blob/main/src/agents/run.py |
+| _beta_runner.py — SDK 内置的 Tool Runner 循环 | Anthropic SDK | https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/lib/tools/_beta_runner.py |
+| Model.response() — while True 工具调用循环 | Agno | https://github.com/agno-agi/agno/blob/main/libs/agno/agno/models/base.py |
+| create_react_agent() — 图节点 + 条件边构建 | LangGraph | https://github.com/langchain-ai/langgraph/blob/main/libs/prebuilt/langgraph/prebuilt/chat_agent_executor.py |
+| run_steps.py — NextStep 类型定义 | OpenAI Agents SDK | https://github.com/openai/openai-agents-python/blob/main/src/agents/run_internal/run_steps.py |
 
 ## 开发日志
 
-> 开发过程中遇到的问题、踩坑记录、设计变更
+### 2026-03-24
 
-_开发时填写_
+**已实现**
+- `src/myagent/models.py` — Message, StepResult, AgentResult (Pydantic v2)
+- `src/myagent/_llm.py` — LLMProtocol, LLMResponse, OpenAILLM (lazy import)
+- `src/myagent/agent.py` — Agent 类，for 循环核心 loop，step() 扩展点
+- `tests/test_agent.py` — 14 个测试 + 1 个版本测试，MockLLM 实现
+- `src/myagent/__init__.py` — 公开 API 导出
 
-<!-- 格式示例：
-### 问题 1：简要描述
-- **现象**：发生了什么
-- **根因**：为什么发生
-- **解决**：怎么解决的
-- **参考**：相关链接
--->
+**遇到的问题**
+
+1. **Ruff UP037 与 F821 冲突**：`_get_client(self) -> "openai.AsyncOpenAI"` 带引号的类型注解被 ruff UP037 规则自动去掉引号，但去掉后因为 openai 是懒加载导入，ruff F821 报 undefined name。解决：将返回类型改为 `Any`，因为 openai 是可选依赖，用 `Any` 更符合实际语义。
+
+2. **pytest-asyncio 与 `asyncio.run()` 冲突**：`test_run_sync` 测试标记了 `@pytest.mark.asyncio`，测试函数在事件循环内运行，而 `run_sync()` 内部调用 `asyncio.run()` 不能嵌套事件循环。解决：去掉该测试的 `async` 标记，作为纯同步测试运行。
+
+3. **Ruff I001 import sorting**：`from __future__ import annotations` 与后续 import 之间的排序问题，3 个文件受影响。解决：`ruff check --fix` 自动修复。

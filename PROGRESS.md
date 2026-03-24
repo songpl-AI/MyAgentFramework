@@ -8,9 +8,9 @@
 
 ## 当前状态
 
-**当前阶段**：Phase 0 — 项目骨架（已完成）
-**下一阶段**：Phase 1 — 最小 Agent Loop
-**最新 Tag**：`v0.0-skeleton`
+**当前阶段**：Phase 1 — 最小 Agent Loop（已完成）
+**下一阶段**：Phase 2 — Tool 系统
+**最新 Tag**：`v0.1-agent-loop`
 
 ---
 
@@ -19,7 +19,7 @@
 | Phase | 名称 | 状态 | Tag | 完成日期 | 备注 |
 |---|---|---|---|---|---|
 | 0 | 项目骨架 | ✅ 已完成 | `v0.0-skeleton` | 2026-03-24 | 骨架 + 博客 #0 |
-| 1 | 最小 Agent Loop | ⏳ 未开始 | - | - | |
+| 1 | 最小 Agent Loop | ✅ 已完成 | `v0.1-agent-loop` | 2026-03-24 | 核心循环 + 15 个测试 |
 | 2 | Tool 系统 | ⏳ 未开始 | - | - | |
 | 3 | 多 Provider 适配 | ⏳ 未开始 | - | - | |
 | 4 | Memory 与 State | ⏳ 未开始 | - | - | |
@@ -68,6 +68,33 @@ _无 — Phase 0 已全部完成_
 
 ---
 
+## Phase 1 — 最小 Agent Loop 详细进度
+
+### 已完成
+
+- [x] 调研 OpenAI Agents SDK、Anthropic SDK、Agno、LangGraph 的循环实现
+- [x] 调研 ReAct 论文和理论基础
+- [x] 设计思考：循环结构（for vs while）、循环位置（Agent 层 vs Model 层）、LLM 注入方式
+- [x] 实现 `Message` / `StepResult` / `AgentResult` 数据模型 (Pydantic v2)
+- [x] 实现 `LLMProtocol` + `LLMResponse` + `OpenAILLM` (lazy import)
+- [x] 实现 `Agent` 类：for 循环核心 loop、step() 扩展点、run_sync() 同步包装
+- [x] 实现 `MockLLM` 测试工具
+- [x] 15 个测试覆盖：基础功能(4) + 终止条件(5) + 多步执行(2) + 配置(3) + 版本(1)
+- [x] ruff / mypy / pytest 全部通过
+- [x] 更新 phase-1 开发日志（记录 3 个开发问题）
+- [x] 更新 PROGRESS.md
+
+### 验收检查
+
+- [x] `Agent.run("你好")` 返回 `AgentResult` 且包含正确 output
+- [x] 对话历史正确记录（system + user + assistant）
+- [x] `max_steps=1` 正确终止
+- [x] 多步场景消息正确累积
+- [x] `finish_reason="stop"` / `"length"` / `"max_steps"` 正确处理
+- [x] 空响应安全处理
+
+---
+
 ## 变更记录
 
 ### 2026-03-24
@@ -81,3 +108,8 @@ _无 — Phase 0 已全部完成_
 - 撰写博客 #0：《为什么我要从零构建一个 Agent 框架》
 - 创建 PROGRESS.md 开发进度追踪文档
 - Phase 0 完成，打 Tag `v0.0-skeleton`
+- 开始 Phase 1：调研 OpenAI Agents SDK、Anthropic SDK、Agno、LangGraph 的 Agent Loop 实现
+- Phase 1 设计思考完成：选择 for 循环 + Protocol 注入 + Agent 层控制
+- Phase 1 实现完成：Agent, Message, StepResult, AgentResult, LLMProtocol, OpenAILLM
+- 15 个测试全部通过（ruff + mypy + pytest 三项检查通过）
+- Phase 1 完成，打 Tag `v0.1-agent-loop`
