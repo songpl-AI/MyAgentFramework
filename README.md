@@ -14,17 +14,20 @@
 
 | Phase | 名称 | Tag | 博客 |
 |---|---|---|---|
-| 0 | 项目骨架 | `v0.0-skeleton` | [为什么我要从零构建一个 Agent 框架](blog/00-why-build-agent-framework.md) |
-| 1 | 最小 Agent Loop | `v0.1-agent-loop` | 50 行代码实现一个 Agent Loop |
+| 0 | 项目骨架 | [`v0.0-skeleton`](../../tree/v0.0-skeleton) | [为什么我要从零构建一个 Agent 框架](blog/00-why-build-agent-framework.md) |
+| 1 | 最小 Agent Loop | [`v0.1-agent-loop`](../../tree/v0.1-agent-loop) | [50 行代码实现一个 Agent Loop](blog/01-minimal-agent-loop.md) |
 | 2 | Tool 系统 | `v0.2-tools` | 让 Agent 拥有双手 — 构建 Tool 系统 |
 | 3 | 多 Provider 适配 | `v0.3-providers` | 一套代码接入所有大模型 |
 | 4 | Memory 与 State | `v0.4-memory` | 给 Agent 一个记忆 — State 管理的本质 |
-| 5 | 多 Agent 编排 | `v0.5-orchestration` | 当一个 Agent 不够用 — 多 Agent 编排 |
-| 6 | Guardrails 与安全 | `v0.6-guardrails` | 生产环境的 Agent 需要什么安全措施 |
-| 7 | 可观测性 | `v0.7-observability` | Agent 出了问题怎么调试 — 可观测性实战 |
-| 8 | MCP 协议 | `v0.8-mcp` | MCP — Agent 工具的通用语言 |
-| 9 | 生产化 | `v0.9-production` | 从玩具到生产 — Agent 框架的最后一公里 |
-| 10 | 发布 v1.0 | `v1.0-release` | 我们从零构建了一个 Agent 框架 |
+| 5 | RAG | `v0.5-rag` | 让 Agent 拥有知识 — RAG 系统的本质 |
+| 6 | 多 Agent 编排 | `v0.6-orchestration` | 当一个 Agent 不够用 — 多 Agent 编排 |
+| 7 | Guardrails 与安全 | `v0.7-guardrails` | 生产环境的 Agent 需要什么安全措施 |
+| 8 | 可观测性 | `v0.8-observability` | Agent 出了问题怎么调试 — 可观测性实战 |
+| 9 | MCP 协议 | `v0.9-mcp` | MCP — Agent 工具的通用语言 |
+| 10 | Agent Skills | `v0.10-skills` | Agent Skills — 让 Agent 按需加载专业能力 |
+| 11 | A2A 协议 | `v0.11-a2a` | A2A — 让不同框架的 Agent 互相协作 |
+| 12 | 生产化 | `v0.12-production` | 从玩具到生产 — Agent 框架的最后一公里 |
+| 13 | 发布 v1.0 | `v1.0-release` | 我们从零构建了一个 Agent 框架 |
 
 你可以 `git checkout <tag>` 切到任意阶段，查看该阶段的完整代码。
 
@@ -40,7 +43,21 @@ cd MyAgentFramework
 uv sync --all-extras --dev
 ```
 
-> 完整的使用示例将在 Phase 1 完成后补充。
+**基本用法（Phase 1 已完成）：**
+
+```python
+import asyncio
+from myagent import Agent
+
+agent = Agent(
+    name="assistant",
+    instructions="你是一个有用的助手。",
+)
+result = asyncio.run(agent.run("你好，介绍一下你自己"))
+print(result.output)
+```
+
+> 需要设置 `OPENAI_API_KEY` 环境变量，或传入自定义 LLM 实现。
 
 ## 项目结构
 
@@ -48,13 +65,18 @@ uv sync --all-extras --dev
 src/myagent/
 ├── __init__.py          # 版本号、公开 API
 ├── agent.py             # Agent 核心循环（Phase 1）
+├── models.py            # 数据模型：Message, StepResult, AgentResult
+├── _llm.py              # LLM 抽象层：Protocol + OpenAI 实现
 ├── tools/               # Tool 系统（Phase 2）
 ├── providers/           # LLM Provider 适配（Phase 3）
 ├── memory/              # Memory 与 State（Phase 4）
-├── orchestration/       # 多 Agent 编排（Phase 5）
-├── guardrails/          # 安全与校验（Phase 6）
-├── tracing/             # 可观测性（Phase 7）
-└── mcp/                 # MCP 协议（Phase 8）
+├── rag/                 # RAG 检索增强生成（Phase 5）
+├── orchestration/       # 多 Agent 编排（Phase 6）
+├── guardrails/          # 安全与校验（Phase 7）
+├── tracing/             # 可观测性（Phase 8）
+├── mcp/                 # MCP 协议（Phase 9）
+├── skills/              # Agent Skills（Phase 10）
+└── a2a/                 # A2A 协议（Phase 11）
 ```
 
 ## 文档
