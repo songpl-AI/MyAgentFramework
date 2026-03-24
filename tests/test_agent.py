@@ -20,7 +20,7 @@ from myagent import Agent, AgentResult, Message, StepResult
 from myagent._llm import LLMResponse
 
 # ---------------------------------------------------------------------------
-# MockLLM — deterministic LLM for testing
+# MockLLM — 用于测试的确定性 LLM
 # ---------------------------------------------------------------------------
 
 class MockLLM:
@@ -43,13 +43,13 @@ class MockLLM:
     async def call(self, messages: list[Message], model: str) -> LLMResponse:
         """Return the next pre-defined response."""
         self.call_count += 1
-        # Store a copy of the messages for assertion
+        # 保存消息副本，用于测试断言
         self.call_history.append(list(messages))
         return next(self._responses)
 
 
 # ---------------------------------------------------------------------------
-# Helper to create a simple mock
+# 辅助函数：快速创建 MockLLM
 # ---------------------------------------------------------------------------
 
 def make_mock(*texts: str, finish_reasons: list[str] | None = None) -> MockLLM:
@@ -68,7 +68,7 @@ def make_mock(*texts: str, finish_reasons: list[str] | None = None) -> MockLLM:
 
 
 # ---------------------------------------------------------------------------
-# Tests: Basic functionality
+# 测试：基础功能
 # ---------------------------------------------------------------------------
 
 class TestAgentBasic:
@@ -129,7 +129,7 @@ class TestAgentBasic:
 
 
 # ---------------------------------------------------------------------------
-# Tests: Termination conditions
+# 测试：终止条件
 # ---------------------------------------------------------------------------
 
 class TestTermination:
@@ -155,7 +155,7 @@ class TestTermination:
         it keeps wanting to call tools (finish_reason="tool_calls").
         In Phase 1 without tool support, this is an edge case safety test.
         """
-        # All responses have finish_reason="tool_calls" (model keeps wanting tools)
+        # 所有响应的 finish_reason="tool_calls"（模型持续请求工具调用）
         mock = make_mock(
             "Thinking...", "Still thinking...", "More thinking...",
             finish_reasons=["tool_calls", "tool_calls", "tool_calls"],
@@ -193,7 +193,7 @@ class TestTermination:
     @pytest.mark.asyncio
     async def test_max_steps_one(self) -> None:
         """max_steps=1 executes exactly one step regardless of finish_reason."""
-        # finish_reason is "tool_calls" but max_steps=1 forces termination
+        # finish_reason 是 "tool_calls" 但 max_steps=1 强制终止
         mock = make_mock("Need tools", finish_reasons=["tool_calls"])
         agent = Agent(name="test", llm=mock, max_steps=1)
 
@@ -204,7 +204,7 @@ class TestTermination:
 
 
 # ---------------------------------------------------------------------------
-# Tests: Message accumulation across steps
+# 测试：多步执行中的消息累积
 # ---------------------------------------------------------------------------
 
 class TestMultiStep:
@@ -226,22 +226,22 @@ class TestMultiStep:
 
         result = await agent.run("What is the meaning of life?")
 
-        # Should have run 2 steps
+        # 应该执行了 2 步
         assert result.total_steps == 2
         assert result.finish_reason == "stop"
         assert result.output == "After consideration, the answer is 42."
 
-        # Verify message history: system + user + assistant1 + assistant2
+        # 验证消息历史：system + user + assistant1 + assistant2
         assert len(result.messages) == 4
         assert result.messages[0].role == "system"
         assert result.messages[1].role == "user"
         assert result.messages[2].role == "assistant"
         assert result.messages[3].role == "assistant"
 
-        # Verify the LLM saw accumulated history on second call
-        # First call: [system, user]
+        # 验证 LLM 在第二次调用时看到了累积的历史
+        # 第一次调用：[system, user]
         assert len(mock.call_history[0]) == 2
-        # Second call: [system, user, assistant1]
+        # 第二次调用：[system, user, assistant1]
         assert len(mock.call_history[1]) == 3
 
     @pytest.mark.asyncio
@@ -261,14 +261,14 @@ class TestMultiStep:
         assert result.finish_reason == "stop"
         assert "final answer" in result.output
 
-        # Verify message growth: 2, 3, 4 messages seen by LLM
+        # 验证消息增长：LLM 分别看到 2、3、4 条消息
         assert len(mock.call_history[0]) == 2
         assert len(mock.call_history[1]) == 3
         assert len(mock.call_history[2]) == 4
 
 
 # ---------------------------------------------------------------------------
-# Tests: Agent configuration
+# 测试：Agent 配置
 # ---------------------------------------------------------------------------
 
 class TestAgentConfig:

@@ -21,7 +21,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
-# Message — the universal unit of conversation
+# Message — 对话的基本单元
 # ---------------------------------------------------------------------------
 
 class Message(BaseModel):
@@ -40,13 +40,13 @@ class Message(BaseModel):
     role: Literal["system", "user", "assistant", "tool"] = "user"
     content: str | None = None
 
-    # -- Phase 2 will add these fields: --
+    # -- Phase 2 将添加以下字段：--
     # tool_calls: list[ToolCall] | None = None
     # tool_call_id: str | None = None
 
 
 # ---------------------------------------------------------------------------
-# StepResult — one iteration of the agent loop
+# StepResult — Agent 循环的单次迭代结果
 # ---------------------------------------------------------------------------
 
 class StepResult(BaseModel):
@@ -71,7 +71,7 @@ class StepResult(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# AgentResult — the complete output of an agent run
+# AgentResult — Agent 一次运行的完整输出
 # ---------------------------------------------------------------------------
 
 class AgentResult(BaseModel):

@@ -79,7 +79,7 @@ class Agent:
         self._llm: LLMProtocol = llm or OpenAILLM()
 
     # -------------------------------------------------------------------
-    # Public API
+    # 公开 API
     # -------------------------------------------------------------------
 
     async def run(self, input: str) -> AgentResult:
@@ -95,24 +95,24 @@ class Agent:
             AgentResult containing the final output, full message history,
             and step-by-step execution trace.
         """
-        # Build initial conversation: system prompt + user message
+        # 构建初始对话：系统提示 + 用户消息
         messages: list[Message] = [
             Message(role="system", content=self.instructions),
             Message(role="user", content=input),
         ]
         steps: list[StepResult] = []
 
-        # -- The Agent Loop --
-        # Uses `for` with max_steps for built-in safety (no `while True` needed).
-        # Each iteration = one LLM call = one "step".
+        # -- Agent 核心循环 --
+        # 用 `for` + max_steps 实现天然的安全上限（不需要 `while True`）。
+        # 每次迭代 = 一次 LLM 调用 = 一个 "step"。
         for step_number in range(1, self.max_steps + 1):
             step_result = await self.step(messages, step_number)
             steps.append(step_result)
 
-            # Append the assistant's response to conversation history
+            # 将助手的回复追加到对话历史
             messages.append(step_result.message)
 
-            # Check termination: model says it's done or returned empty content
+            # 检查终止条件：模型说"完成了"或返回空内容
             if self._should_stop(step_result):
                 return self._build_result(
                     messages=messages,
@@ -120,7 +120,7 @@ class Agent:
                     finish_reason=step_result.finish_reason,
                 )
 
-        # Max steps reached — return what we have with a clear signal
+        # 达到最大步数 — 返回当前结果并标记 finish_reason
         return self._build_result(
             messages=messages,
             steps=steps,
@@ -136,7 +136,7 @@ class Agent:
         return asyncio.run(self.run(input))
 
     # -------------------------------------------------------------------
-    # Step execution — the extension point
+    # 单步执行 — 子类扩展点
     # -------------------------------------------------------------------
 
     async def step(self, messages: list[Message], step_number: int) -> StepResult:
@@ -164,7 +164,7 @@ class Agent:
         )
 
     # -------------------------------------------------------------------
-    # Private helpers
+    # 私有辅助方法
     # -------------------------------------------------------------------
 
     @staticmethod
@@ -178,17 +178,16 @@ class Agent:
         In Phase 2, we'll add: finish_reason="tool_calls" → don't stop,
         execute the tools and continue.
         """
-        # Natural completion: model is done
+        # 自然结束：模型完成了推理
         if step_result.finish_reason == "stop":
             return True
 
-        # Empty response: abnormal but no point continuing
+        # 空响应：异常情况，继续也没有意义
         if not step_result.message.content:
             return True
 
-        # finish_reason == "length" means the model hit max_tokens —
-        # in Phase 1 we stop (in later phases we might continue with
-        # a follow-up prompt).
+        # finish_reason == "length" 表示模型达到了 max_tokens 上限 —
+        # Phase 1 中直接停止（后续阶段可能会用 follow-up prompt 继续）。
         if step_result.finish_reason == "length":
             return True
 
@@ -205,7 +204,7 @@ class Agent:
         The output is the content of the last assistant message, which is
         the model's final response to the user.
         """
-        # Find the last assistant message as the output
+        # 从消息历史中找到最后一条助手消息作为输出
         output = ""
         for msg in reversed(messages):
             if msg.role == "assistant" and msg.content:
@@ -221,7 +220,7 @@ class Agent:
         )
 
     # -------------------------------------------------------------------
-    # Dunder methods
+    # 魔术方法
     # -------------------------------------------------------------------
 
     def __repr__(self) -> str:

@@ -25,7 +25,7 @@ from typing import Any, Protocol, runtime_checkable
 from myagent.models import Message
 
 # ---------------------------------------------------------------------------
-# LLM Protocol — the interface the Agent depends on
+# LLM 协议 — Agent 依赖的接口
 # ---------------------------------------------------------------------------
 
 @runtime_checkable
@@ -62,7 +62,7 @@ class LLMResponse:
 
 
 # ---------------------------------------------------------------------------
-# OpenAI implementation — the default for Phase 1
+# OpenAI 实现 — Phase 1 的默认 Provider
 # ---------------------------------------------------------------------------
 
 class OpenAILLM:
@@ -105,7 +105,7 @@ class OpenAILLM:
         """
         client = self._get_client()
 
-        # Convert internal Message objects to OpenAI dict format
+        # 将内部 Message 对象转换为 OpenAI 的 dict 格式
         openai_messages = [
             {"role": msg.role, "content": msg.content or ""}
             for msg in messages

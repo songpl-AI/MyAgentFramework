@@ -56,6 +56,9 @@ select = [
     "UP",  # pyupgrade
     "RUF", # ruff-specific rules
 ]
+ignore = [
+    "RUF003",  # 允许中文注释中的全角标点（：，（）等）
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["myagent"]
