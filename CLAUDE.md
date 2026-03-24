@@ -160,13 +160,76 @@ MyAgentFramework/
 - 错误处理：自定义异常层级，不吞没错误
 - 测试覆盖：每个 Phase 的核心功能必须有测试
 
+## 开发过程记录规范（重要）
+
+**每个阶段的开发过程中，必须将以下内容记录到对应的 Phase 文档中（`docs/phases/phase-X-xxx.md`），而不是仅存在 Claude Code memory 里。**
+
+### 问题记录（开发日志）
+
+在每个 Phase 文档末尾维护一个 `## 开发日志` 章节，记录：
+
+- **遇到的问题**：描述问题现象、根因分析、解决方案
+- **踩过的坑**：API 行为与文档不一致、版本兼容性、易错点
+- **设计变更**：开发过程中偏离原始需求的地方及原因
+- **性能发现**：意外的性能瓶颈或优化机会
+
+格式示例：
+```markdown
+## 开发日志
+
+### 问题 1：OpenAI 流式响应中 tool_calls 的增量拼接
+- **现象**：流式模式下 tool_calls 的 arguments 是分段返回的 JSON 片段
+- **根因**：OpenAI 的 streaming 对 function arguments 做了 chunked 处理
+- **解决**：实现 ToolCallAccumulator 逐步拼接，完整后再解析 JSON
+- **参考**：[OpenAI Streaming 文档](https://platform.openai.com/docs/api-reference/streaming)
+
+### 问题 2：...
+```
+
+### 参考框架链接
+
+在每个 Phase 文档中维护一个 `## 参考实现` 章节，记录开发时参考的其他框架的**具体代码链接**：
+
+格式示例：
+```markdown
+## 参考实现
+
+| 参考内容 | 框架 | 链接 |
+|---|---|---|
+| Tool Schema 生成 | LangChain | https://github.com/langchain-ai/langchain/blob/master/libs/core/langchain_core/tools/convert.py |
+| Handoff 模式 | OpenAI Agents SDK | https://github.com/openai/openai-agents-python/blob/main/src/agents/handoff.py |
+| Checkpoint 机制 | LangGraph | https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint/langgraph/checkpoint/base.py |
+```
+
+**要求**：
+- 链接必须指向具体文件或代码行，不是仓库首页
+- 说明参考了什么（设计思路 / API 风格 / 具体实现）
+- 如果参考了文档或博客，同样附上链接
+
 ## 博客写作规范
 
 - 每篇博客对应一个 Phase 的完整实现
 - 结构：动机 → 设计思考 → 核心代码 → 运行示例 → 总结与下一步
 - 代码片段必须可直接运行（从对应 tag checkout 后）
 - 面向有 Python 基础但不了解 Agent 框架的读者
+- **必须包含**开发日志中有价值的问题和踩坑经验（这是博客最有价值的部分）
 
 ## 参考资料
 
 - [框架对比分析](docs/agent-frameworks-comparison.md)
+- [阶段需求文档总览](docs/phases/README.md)
+
+## 常用参考框架仓库
+
+| 框架 | 仓库地址 |
+|---|---|
+| LangChain | https://github.com/langchain-ai/langchain |
+| LangGraph | https://github.com/langchain-ai/langgraph |
+| OpenAI Agents SDK | https://github.com/openai/openai-agents-python |
+| Anthropic SDK | https://github.com/anthropics/anthropic-sdk-python |
+| CrewAI | https://github.com/crewAIInc/crewAI |
+| AutoGen | https://github.com/microsoft/autogen |
+| Semantic Kernel | https://github.com/microsoft/semantic-kernel |
+| Vercel AI SDK | https://github.com/vercel/ai |
+| Agno | https://github.com/agno-agi/agno |
+| MCP Specification | https://github.com/modelcontextprotocol/specification |
