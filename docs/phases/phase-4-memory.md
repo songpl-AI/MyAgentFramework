@@ -171,10 +171,10 @@ class TokenCounter:
 ## 不做的事情（显式排除）
 
 - ❌ 向量存储 / RAG — 独立的扩展功能
-- ❌ 跨 Agent 共享 Memory — Phase 5
+- ❌ 跨 Agent 共享 Memory — Phase 6
 - ❌ Agent 自主记忆管理（像 Agno 那样）— 后续扩展
-- ❌ 加密存储 — Phase 9
-- ❌ 分布式存储（Redis / Postgres）— Phase 9
+- ❌ 加密存储 — Phase 12
+- ❌ 分布式存储（Redis / Postgres）— Phase 12
 
 ## 验收标准
 

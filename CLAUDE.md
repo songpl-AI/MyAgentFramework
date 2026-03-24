@@ -90,21 +90,21 @@ Tool 系统的核心问题是：如何让 LLM 知道有哪些函数可以调用�
 
 ## 阶段路线图
 
-### Phase 0 — 项目骨架 `v0.0-skeleton`
+### Phase 0 — 项目骨架 `v0.0-skeleton` ✅
 
-- [ ] 项目结构初始化（src/tests/docs/blog）
-- [ ] uv 包管理配置
-- [ ] 基础 CI（linting + type check）
-- [ ] README + LICENSE
-- [ ] 博客 #0：《为什么我要从零构建一个 Agent 框架》
+- [x] 项目结构初始化（src/tests/docs/blog）
+- [x] uv 包管理配置
+- [x] 基础 CI（linting + type check）
+- [x] README + LICENSE
+- [x] 博客 #0：《为什么我要从零构建一个 Agent 框架》
 
-### Phase 1 — 最小 Agent Loop `v0.1-agent-loop`
+### Phase 1 — 最小 Agent Loop `v0.1-agent-loop` ✅
 
-- [ ] 最简 ReAct 循环（think → act → observe → repeat）
-- [ ] 单一 LLM Provider 接入（先做 OpenAI 或 Anthropic）
-- [ ] 硬编码的 system prompt
-- [ ] 终止条件（max_steps + 模型自主结束）
-- [ ] 博客 #1：《50 行代码实现一个 Agent Loop》
+- [x] 最简 ReAct 循环（think → act → observe → repeat）
+- [x] 单一 LLM Provider 接入（OpenAI，Protocol 模式）
+- [x] 硬编码的 system prompt
+- [x] 终止条件（max_steps + 模型自主结束）
+- [x] 博客 #1：《50 行代码实现一个 Agent Loop》
 
 ### Phase 2 — Tool 系统 `v0.2-tools`
 
@@ -130,53 +130,78 @@ Tool 系统的核心问题是：如何让 LLM 知道有哪些函数可以调用�
 - [ ] 持久化接口（内存 / SQLite）
 - [ ] 博客 #4：《给 Agent 一个记忆 — State 管理的本质》
 
-### Phase 5 — 多 Agent 编排 `v0.5-orchestration`
+### Phase 5 — RAG `v0.5-rag`
+
+- [ ] 文档分块（Chunking）：固定大小 / 递归 / Markdown
+- [ ] 向量化（Embedding）：OpenAI text-embedding-3-small
+- [ ] 向量存储（VectorStore）：InMemory + numpy
+- [ ] 检索器（Retriever）：组合 Chunker + Embedder + VectorStore
+- [ ] Agent 集成：自动检索相关上下文拼入 prompt
+- [ ] 博客 #5：《让 Agent 拥有知识 — RAG 系统的本质》
+
+### Phase 6 — 多 Agent 编排 `v0.6-orchestration`
 
 - [ ] Agent 间消息传递协议
 - [ ] 顺序编排（Pipeline）
 - [ ] 并行编排（Fan-out / Fan-in）
 - [ ] 条件路由（Router Agent）
 - [ ] Handoff 模式
-- [ ] 博客 #5：《当一个 Agent 不够用 — 多 Agent 编排》
+- [ ] 博客 #6：《当一个 Agent 不够用 — 多 Agent 编排》
 
-### Phase 6 — Guardrails 与安全 `v0.6-guardrails`
+### Phase 7 — Guardrails 与安全 `v0.7-guardrails`
 
 - [ ] 输入校验（Input Guardrails）
 - [ ] 输出校验（Output Guardrails）
 - [ ] 工具执行沙箱
 - [ ] 速率限制 + 成本控制
-- [ ] 博客 #6：《生产环境的 Agent 需要什么安全措施》
+- [ ] 博客 #7：《生产环境的 Agent 需要什么安全措施》
 
-### Phase 7 — 可观测性 `v0.7-observability`
+### Phase 8 — 可观测性 `v0.8-observability`
 
 - [ ] Trace 系统（Span / Event）
 - [ ] 成本追踪（token 使用 + API 费用）
 - [ ] 结构化日志
 - [ ] 可选 OpenTelemetry 导出
-- [ ] 博客 #7：《Agent 出了问题怎么调试 — 可观测性实战》
+- [ ] 博客 #8：《Agent 出了问题怎么调试 — 可观测性实战》
 
-### Phase 8 — MCP 协议支持 `v0.8-mcp`
+### Phase 9 — MCP 协议支持 `v0.9-mcp`
 
 - [ ] MCP Client 实现
 - [ ] MCP Server 实现（将自己的工具暴露为 MCP）
 - [ ] 与外部 MCP 工具集成测试
-- [ ] 博客 #8：《MCP — Agent 工具的通用语言》
+- [ ] 博客 #9：《MCP — Agent 工具的通用语言》
 
-### Phase 9 — 生产化 `v0.9-production`
+### Phase 10 — Agent Skills `v0.10-skills`
+
+- [ ] SKILL.md 解析（YAML frontmatter + Markdown body）
+- [ ] Skill 发现与加载（项目级 + 用户级搜索路径）
+- [ ] Skill 匹配与激活（关键词匹配 + 可选 LLM 匹配）
+- [ ] Agent 集成：按需加载 Skill 指令拼入 prompt
+- [ ] 博客 #10：《Agent Skills — 让 Agent 按需加载专业能力》
+
+### Phase 11 — A2A 协议 `v0.11-a2a`
+
+- [ ] Agent Card 能力声明（发现机制）
+- [ ] A2A Client（调用远程 Agent）
+- [ ] A2A Server（暴露本地 Agent 为 A2A 服务）
+- [ ] Task 生命周期管理（提交→处理→完成）
+- [ ] 博客 #11：《A2A — 让不同框架的 Agent 互相协作》
+
+### Phase 12 — 生产化 `v0.12-production`
 
 - [ ] 配置驱动的 Agent 定义（YAML/JSON）
 - [ ] Checkpoint / Resume（断点恢复）
 - [ ] 错误恢复策略
 - [ ] 并发控制
-- [ ] 博客 #9：《从玩具到生产 — Agent 框架的最后一公里》
+- [ ] 博客 #12：《从玩具到生产 — Agent 框架的最后一公里》
 
-### Phase 10 — 发布 `v1.0-release`
+### Phase 13 — 发布 `v1.0-release`
 
 - [ ] API 稳定化
 - [ ] 完整文档站
 - [ ] PyPI 发布
 - [ ] 示例集合（Cookbook）
-- [ ] 博客 #10：《我们从零构建了一个 Agent 框架》
+- [ ] 博客 #13：《我们从零构建了一个 Agent 框架》
 
 ---
 
@@ -305,6 +330,8 @@ MyAgentFramework/
 | Vercel AI SDK | https://github.com/vercel/ai |
 | Agno | https://github.com/agno-agi/agno |
 | MCP Specification | https://github.com/modelcontextprotocol/specification |
+| Agent Skills | https://github.com/agentskills/agentskills |
+| Google A2A Protocol | https://github.com/google/A2A |
 
 ### 关键论文
 
@@ -313,8 +340,9 @@ MyAgentFramework/
 | ReAct: Synergizing Reasoning and Acting in LMs | Phase 1 Agent Loop | https://arxiv.org/abs/2210.03629 |
 | Toolformer: LMs Can Teach Themselves to Use Tools | Phase 2 Tool 系统 | https://arxiv.org/abs/2302.04761 |
 | MemGPT: Towards LLMs as Operating Systems | Phase 4 Memory | https://arxiv.org/abs/2310.08560 |
-| AutoGen: Enabling Next-Gen LLM Applications | Phase 5 多 Agent | https://arxiv.org/abs/2308.08155 |
-| Constitutional AI: Harmlessness from AI Feedback | Phase 6 Guardrails | https://arxiv.org/abs/2212.08073 |
+| RAG for Knowledge-Intensive NLP Tasks | Phase 5 RAG | https://arxiv.org/abs/2005.11401 |
+| AutoGen: Enabling Next-Gen LLM Applications | Phase 6 多 Agent | https://arxiv.org/abs/2308.08155 |
+| Constitutional AI: Harmlessness from AI Feedback | Phase 7 Guardrails | https://arxiv.org/abs/2212.08073 |
 | Chain-of-Thought Prompting Elicits Reasoning | 基础理论 | https://arxiv.org/abs/2201.11903 |
 
 ### 经典博客 / 综述

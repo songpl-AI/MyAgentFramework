@@ -177,9 +177,9 @@ agent = Agent(name="bot", instructions="...", provider=provider)
 
 - ❌ 本地模型支持（Ollama 等）— 可通过 base_url 兼容
 - ❌ 多模态（图片/音频输入）— 后续扩展
-- ❌ 速率限制 / 重试 — Phase 6
-- ❌ 成本追踪 — Phase 7
-- ❌ Provider 级别的 Fallback — Phase 6
+- ❌ 速率限制 / 重试 — Phase 7
+- ❌ 成本追踪 — Phase 8
+- ❌ Provider 级别的 Fallback — Phase 7
 
 ## 验收标准
 

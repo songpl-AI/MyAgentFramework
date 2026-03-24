@@ -1,7 +1,7 @@
-# Phase 9 — 生产化
+# Phase 12 — 生产化
 
-> Tag: `v0.9-production`
-> 前置依赖: Phase 8
+> Tag: `v0.12-production`
+> 前置依赖: Phase 11
 > 博客: 《从玩具到生产 — Agent 框架的最后一公里》
 
 ---

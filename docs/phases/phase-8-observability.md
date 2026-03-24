@@ -1,7 +1,7 @@
-# Phase 7 — 可观测性
+# Phase 8 — 可观测性
 
-> Tag: `v0.7-observability`
-> 前置依赖: Phase 6
+> Tag: `v0.8-observability`
+> 前置依赖: Phase 7
 > 博客: 《Agent 出了问题怎么调试 — 可观测性实战》
 
 ---

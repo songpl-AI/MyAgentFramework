@@ -1,7 +1,7 @@
-# Phase 10 — 发布 v1.0
+# Phase 13 — 发布 v1.0
 
 > Tag: `v1.0-release`
-> 前置依赖: Phase 9
+> 前置依赖: Phase 12
 > 博客: 《我们从零构建了一个 Agent 框架》
 
 ---
@@ -17,7 +17,7 @@
 - 审查所有公开 API，确保命名一致性
 - 标记实验性 API（`@experimental` 装饰器）
 - 确定 deprecation 策略
-- 编写 CHANGELOG.md（从 Phase 0 到 Phase 9 的变更记录）
+- 编写 CHANGELOG.md（从 Phase 0 到 Phase 12 的变更记录）
 - 语义化版本号：v1.0.0
 
 **公开 API 表面检查清单**：

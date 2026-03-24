@@ -1,7 +1,7 @@
-# Phase 8 — MCP 协议支持
+# Phase 9 — MCP 协议支持
 
-> Tag: `v0.8-mcp`
-> 前置依赖: Phase 7
+> Tag: `v0.9-mcp`
+> 前置依赖: Phase 8
 > 博客: 《MCP — Agent 工具的通用语言》
 
 ---

@@ -1,7 +1,7 @@
-# Phase 5 — 多 Agent 编排
+# Phase 6 — 多 Agent 编排
 
-> Tag: `v0.5-orchestration`
-> 前置依赖: Phase 4
+> Tag: `v0.6-orchestration`
+> 前置依赖: Phase 5
 > 博客: 《当一个 Agent 不够用 — 多 Agent 编排》
 
 ---
@@ -189,7 +189,7 @@ class OrchestrationResult(BaseModel):
 
 - ❌ 图编排（DAG）— 可用 Pipeline + Parallel 组合近似
 - ❌ 动态 Agent 创建（运行时生成新 Agent）
-- ❌ 分布式 Agent（跨进程/机器）— Phase 9
+- ❌ 分布式 Agent（跨进程/机器）— Phase 12
 - ❌ Agent 间共享 Memory — 通过 history 传递替代
 - ❌ 复杂的终止策略（如 AutoGen 的组合条件）— 保持简单
 

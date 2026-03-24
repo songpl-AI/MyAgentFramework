@@ -126,8 +126,8 @@ print(result.output)
 - ❌ 多 Provider 支持 — Phase 3
 - ❌ 流式输出 — Phase 3
 - ❌ Memory 持久化 — Phase 4
-- ❌ 多 Agent 编排 — Phase 5
-- ❌ 错误重试 / Fallback — Phase 6
+- ❌ 多 Agent 编排 — Phase 6
+- ❌ 错误重试 / Fallback — Phase 7
 
 ## 验收标准
 

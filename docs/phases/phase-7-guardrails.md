@@ -1,7 +1,7 @@
-# Phase 6 — Guardrails 与安全
+# Phase 7 — Guardrails 与安全
 
-> Tag: `v0.6-guardrails`
-> 前置依赖: Phase 5
+> Tag: `v0.7-guardrails`
+> 前置依赖: Phase 6
 > 博客: 《生产环境的 Agent 需要什么安全措施》
 
 ---
@@ -196,8 +196,8 @@ class CostController:
 
 - ❌ 完整的内容审核系统（接入 OpenAI Moderation 等）— 扩展
 - ❌ 代码执行沙箱（Docker 隔离）— 可作为 Tool Guardrail 扩展
-- ❌ RBAC 权限系统 — Phase 9
-- ❌ 审计日志 — Phase 7（可观测性中处理）
+- ❌ RBAC 权限系统 — Phase 12
+- ❌ 审计日志 — Phase 8（可观测性中处理）
 
 ## 验收标准
 

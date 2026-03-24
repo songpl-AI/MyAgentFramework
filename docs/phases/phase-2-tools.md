@@ -166,10 +166,10 @@ async def execute(self, **kwargs) -> str:
 ## 不做的事情（显式排除）
 
 - ❌ 并行工具调用 — 本阶段按顺序执行
-- ❌ 工具权限控制 — Phase 6
-- ❌ 工具执行沙箱 — Phase 6
-- ❌ MCP 协议支持 — Phase 8
-- ❌ 动态工具（运行时添加/移除）— Phase 5
+- ❌ 工具权限控制 — Phase 7
+- ❌ 工具执行沙箱 — Phase 7
+- ❌ MCP 协议支持 — Phase 9
+- ❌ 动态工具（运行时添加/移除）— Phase 6
 
 ## 验收标准
 

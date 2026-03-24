@@ -13,21 +13,23 @@
 | [Phase 2](phase-2-tools.md) | Tool 系统 | `v0.2-tools` | @tool 装饰器、Schema 生成、工具执行闭环 | 《让 Agent 拥有双手 — 构建 Tool 系统》 |
 | [Phase 3](phase-3-providers.md) | 多 Provider 适配 | `v0.3-providers` | OpenAI/Anthropic 适配、流式输出 | 《一套代码接入所有大模型》 |
 | [Phase 4](phase-4-memory.md) | Memory 与 State | `v0.4-memory` | 对话历史管理、状态持久化 | 《给 Agent 一个记忆 — State 管理的本质》 |
-| [Phase 5](phase-5-orchestration.md) | 多 Agent 编排 | `v0.5-orchestration` | Pipeline/Parallel/Router/Handoff | 《当一个 Agent 不够用 — 多 Agent 编排》 |
-| [Phase 6](phase-6-guardrails.md) | Guardrails 与安全 | `v0.6-guardrails` | 三层防护、速率限制、成本控制 | 《生产环境的 Agent 需要什么安全措施》 |
-| [Phase 7](phase-7-observability.md) | 可观测性 | `v0.7-observability` | Trace/Span、Metrics、Exporters | 《Agent 出了问题怎么调试 — 可观测性实战》 |
-| [Phase 8](phase-8-mcp.md) | MCP 协议支持 | `v0.8-mcp` | MCP Client + Server | 《MCP — Agent 工具的通用语言》 |
-| [Phase 9](phase-9-production.md) | 生产化 | `v0.9-production` | 配置驱动、断点恢复、错误恢复 | 《从玩具到生产 — Agent 框架的最后一公里》 |
-| [Phase 10](phase-10-release.md) | 发布 v1.0 | `v1.0-release` | API 稳定、文档、PyPI、示例 | 《我们从零构建了一个 Agent 框架》 |
+| [Phase 5](phase-5-rag.md) | RAG | `v0.5-rag` | 分块、Embedding、向量检索、Agent 集成 | 《让 Agent 拥有知识 — RAG 系统的本质》 |
+| [Phase 6](phase-6-orchestration.md) | 多 Agent 编排 | `v0.6-orchestration` | Pipeline/Parallel/Router/Handoff | 《当一个 Agent 不够用 — 多 Agent 编排》 |
+| [Phase 7](phase-7-guardrails.md) | Guardrails 与安全 | `v0.7-guardrails` | 三层防护、速率限制、成本控制 | 《生产环境的 Agent 需要什么安全措施》 |
+| [Phase 8](phase-8-observability.md) | 可观测性 | `v0.8-observability` | Trace/Span、Metrics、Exporters | 《Agent 出了问题怎么调试 — 可观测性实战》 |
+| [Phase 9](phase-9-mcp.md) | MCP 协议支持 | `v0.9-mcp` | MCP Client + Server | 《MCP — Agent 工具的通用语言》 |
+| [Phase 10](phase-10-agent-skills.md) | Agent Skills | `v0.10-skills` | SKILL.md 解析、发现、加载、匹配 | 《Agent Skills — 让 Agent 按需加载专业能力》 |
+| [Phase 11](phase-11-a2a.md) | A2A 协议 | `v0.11-a2a` | Agent Card、A2A Client/Server | 《A2A — 让不同框架的 Agent 互相协作》 |
+| [Phase 12](phase-12-production.md) | 生产化 | `v0.12-production` | 配置驱动、断点恢复、错误恢复 | 《从玩具到生产 — Agent 框架的最后一公里》 |
+| [Phase 13](phase-13-release.md) | 发布 v1.0 | `v1.0-release` | API 稳定、文档、PyPI、示例 | 《我们从零构建了一个 Agent 框架》 |
 
 ## 复杂度曲线
 
 ```
-Phase:  0    1    2    3    4    5    6    7    8    9    10
-        │    │    │    │    │    │    │    │    │    │    │
-难度:   ▪    ▪▪   ▪▪▪  ▪▪▪  ▪▪▪  ▪▪▪▪ ▪▪▪  ▪▪▪  ▪▪▪▪ ▪▪▪▪ ▪▪
-代码量: ~50  ~200 ~400 ~500 ~400 ~600 ~400 ~500 ~500 ~400 ~200
-累计:   ~50  ~250 ~650 ~1.1K ~1.5K ~2.1K ~2.5K ~3K ~3.5K ~3.9K ~4.1K
+Phase:  0    1    2    3    4    5    6    7    8    9    10   11   12   13
+        │    │    │    │    │    │    │    │    │    │    │    │    │    │
+难度:   ▪    ▪▪   ▪▪▪  ▪▪▪  ▪▪▪  ▪▪▪  ▪▪▪▪ ▪▪▪  ▪▪▪  ▪▪▪▪ ▪▪▪  ▪▪▪▪ ▪▪▪▪ ▪▪
+代码量: ~50  ~200 ~400 ~500 ~400 ~400 ~600 ~400 ~500 ~500 ~300 ~500 ~400 ~200
 ```
 
 ## 依赖关系
@@ -38,13 +40,16 @@ Phase 0 (骨架)
           └── Phase 2 (Tools)
                  └── Phase 3 (Providers)
                         ├── Phase 4 (Memory)
-                        │      └── Phase 5 (Orchestration)
-                        │             └── Phase 6 (Guardrails)
-                        │                    └── Phase 7 (Observability)
-                        │                           └── Phase 8 (MCP)
-                        │                                  └── Phase 9 (Production)
-                        │                                         └── Phase 10 (Release)
-                        └── (Phase 4-10 也可独立阅读)
+                        │      └── Phase 5 (RAG)
+                        │             └── Phase 6 (Orchestration)
+                        │                    └── Phase 7 (Guardrails)
+                        │                           └── Phase 8 (Observability)
+                        │                                  └── Phase 9 (MCP)
+                        │                                         └── Phase 10 (Agent Skills)
+                        │                                                └── Phase 11 (A2A)
+                        │                                                       └── Phase 12 (Production)
+                        │                                                              └── Phase 13 (Release)
+                        └── (Phase 4-13 也可独立阅读)
 ```
 
 ## 每个阶段文档结构
